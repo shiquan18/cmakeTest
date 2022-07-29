@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "jni.h"
+//#include "native-main.c"
 
 #define  TAG    "MainActivity"
 #define LOGI(...) __android_log_print(ANDROID_LOG_INFO,TAG,__VA_ARGS__)
@@ -11,11 +12,9 @@
 #define LOGE(...) __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
 #define printf(...) __android_log_print(ANDROID_LOG_ERROR,TAG,__VA_ARGS__)
 
-void main();
+//extern void mainC();
 
-void test1();
-
-void test2();
+void mainJ();
 
 JNIEXPORT jstring JNICALL
 Java_com_example_myapplicationcmake_MainActivity_stringFromJNI3(JNIEnv *env, jobject thiz) {
@@ -69,66 +68,152 @@ Java_com_example_myapplicationcmake_MainActivity_accessMethod(JNIEnv *env, jobje
 void JNICALL
 Java_com_example_myapplicationcmake_MainActivity_JniMain(JNIEnv *env, jobject thiz) {
     LOGE("Main=============================================%s,", "start");
-    main();
+    mainJ();
+//    mainC();
     LOGE("Main=============================================%s,", "end");
 }
 
-void main() {
-    test1();
+JNIEXPORT int maxS(int x, int y) {
+    return x > y ? x : y;
+}
+
+JNIEXPORT void test0_1() {
+    /* p 是函数指针 */
+    int (*p)(int, int) = &maxS; // &可以省略
+    int a = 15, b = 11, c = 12, d = 13;
+    printf("请输入三个数字:");
+//    scanf("%d %d %d", &a, &b, &c);
+    /* 与直接调用函数等价，d = maxS(maxS(a, b), c) */
+    d = p(p(a, b), c);
+    printf("最大的数字是: %d\n", d);
+}
+
+JNIEXPORT void test0_2() {
+    int var = 20;   /* 实际变量的声明 */
+    int *ip;        /* 指针变量的声明 */
+    ip = &var;  /* 在指针变量中存储 var 的地址 */
+    printf("var 变量的地址: %p\n", &var);
+/* 在指针变量中存储的地址 */
+    printf("ip 变量存储的地址: %p\n", ip);
+/* 使用指针访问值 */
+    printf("*ip 变量的值: %d\n", *ip);
+}
+// 回调函数
+JNIEXPORT void test5_populate_array(int *array, size_t arraySize, int (*getNextValue)(void)) {
+    for (size_t i = 0; i < arraySize; i++)
+        array[i] = getNextValue();
+}
+
+// 获取随机值
+JNIEXPORT int test5_getNextRandomValue(void) {
+    return rand();
+}
+
+JNIEXPORT void test0_3() {
+    int myarray[10];
+    /* test5_getNextRandomValue 不能加括号，否则无法编译，因为加上括号之后相当于传入此参数时传入了 int , 而不是函数指针*/
+    test5_populate_array(myarray, 10, test5_getNextRandomValue);
+    for (int i = 0; i < 10; i++) {
+        printf("%d ", myarray[i]);
+    }
+    printf("\n");
+}
+
+JNIEXPORT void test2() {
+    const int MAX = 3;
+    int var[] = {10, 100, 200};
+    int i, *ptr;
+    /* 指针中最后一个元素的地址 */
+    ptr = &var[MAX - 1];
+    for (i = MAX; i > 0; i--) {
+        printf("存储地址：var[%d] = %p\n", i - 1, ptr);
+        printf("存储值：var[%d] = %d\n", i - 1, *ptr);
+        /* 指向下一个位置 */
+        ptr--;
+    }
+}
+
+
+JNIEXPORT void test1() {
+    const int MAX = 3;
+    int var[] = {10, 100, 200};
+    int i, *ptr;
+    /* 指针中的数组地址 */
+    ptr = var;
+    for (i = 0; i < MAX; i++) {
+        printf("存储地址：var[%d] = %p\n", i, ptr);
+        printf("存储值：var[%d] = %d\n", i, *ptr);
+        /* 指向下一个位置 */
+        ptr++;
+    }
+}
+
+JNIEXPORT void test2_1() {
+    const int MAX = 3;
+    int var[] = {10, 100, 200};
+    int i, *ptr;
+    /* 指针中第一个元素的地址 */
+    ptr = var;
+    i = 0;
+    while (ptr <= &var[MAX - 1]) {
+        printf("存储地址：var[%d] = %p\n", i, ptr);
+        printf("存储值：var[%d] = %d\n", i, *ptr);
+        /* 指向上一个位置 */
+        ptr++;
+        i++;
+    }
+}
+
+const int MAX = 3;
+
+JNIEXPORT void test3() {
+    int var[] = {10, 100, 200};
+    int i;
+    for (i = 0; i < MAX; i++) {
+        printf("Value of var[%d] = %d\n", i, var[i]);
+    }
+}
+
+JNIEXPORT void test3_1() {
+    int var[] = {10, 100, 200};
+    int i, *ptr[MAX];
+
+    for (i = 0; i < MAX; i++) {
+        ptr[i] = &var[i]; /* 赋值为整数的地址 */
+    }
+    for (i = 0; i < MAX; i++) {
+        printf("Value of var[%d] = %d\n", i, *ptr[i]);
+    }
+}
+
+JNIEXPORT void test3_2() {
+    const int MAX = 4;
+    const char *names[] = {
+            "Zara Ali",
+            "Hina Ali",
+            "Nuha Ali",
+            "Sara Ali",
+    };
+    int i = 0;
+
+    for (i = 0; i < MAX; i++) {
+        printf("Value of names[%d] = %s\n", i, names[i]);
+    }
+}
+
+//JNIEXPORT void test() {}
+void mainJ() {
+//    test0_1();
+//    test0_2();
+//    test0_3();
+//    test1();
 //    test2();
+//    test2_1();
+    test3();
+//    test3_1();
+//    test3_2();
 }
 
-void test2() {
-    int num[50], n, *p, j, loop, i, m, k;
-    printf("请输入这一圈人的数量:\n");
-//    scanf("%d", &n);
-    n = 5;
-    p = num;
-    //开始给这些人编号
-    for (j = 0; j < n; j++) {
-        *(p + j) = j + 1;
-    }
-    i = 0;//i用于计数,即让指针后移
-    m = 0;//m记录退出圈子的人数
-    k = 0;//k报数1,2,3
-    while (m < n - 1)//当退出的人数不大于总人数时，即留下的人数至少是一个人
-        //这句不能写成m<n,因为假设有8人，当退出了6人时，此时还是进行人数退出，即m++，
-        //这时是7<8，剩下的一个人自己喊1，2,3那么他也就退出了，将不会有输出
-    {
-        if (*(p + i) != 0)//如果这个人的头上编号不是0就开始报数加1，这里采用的方法是报数为3的人头上编号重置为0
-        {
-            k++;
-        }
-        if (k == 3) {
-            k = 0;    //报数清零，即下一个人从1开始报数
-            *(p + i) = 0;//将报数为3的人编号重置为0
-            m++;    //退出人数加1
-        }
-        i++;      //指针后移
-        if (i == n)//这句很关键，如果到了队尾，就要使指针重新指向对头
-            //并且它只能放在i++后面，因为只有i++了才有可能i==n
-        {
-            i = 0;
-        }
 
-
-    }
-    printf("现在剩下的人是:");
-    for (loop = 0; loop < n; loop++) {
-        if (num[loop] != 0) {
-            printf("%2d号\n", num[loop]);
-        }
-    }
-
-}
-
-void test1() {
-    int a, b;
-    a = 234;
-    b = ~a;
-    printf("a 的按位取反值为（十进制） %d \n", b);
-    a = ~a;
-    printf("a 的按位取反值为（十六进制） %x \n", a);
-}
 
 
