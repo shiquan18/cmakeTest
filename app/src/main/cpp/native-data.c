@@ -275,6 +275,35 @@ JNIEXPORT void test7() {
     }
 }
 
+JNIEXPORT void test8() {
+//    4	strcmp(s1, s2);
+//    如果 s1 和 s2 是相同的，则返回 0；如果 s1<s2 则返回小于 0；如果 s1>s2 则返回大于 0。
+//    5	strchr(s1, ch);
+//    返回一个指针，指向字符串 s1 中字符 ch 的第一次出现的位置。
+//    6	strstr(s1, s2);
+//    返回一个指针，指向字符串 s1 中字符串 s2 的第一次出现的位置。
+
+    char str1[14] = "runoob";
+    char str2[14] = "google";
+    char str3[14];
+    int len;
+    /* 复制 str1 到 str3 */
+    strcpy(str3, str1);
+    printf("strcpy( str3, str1) :  %s\n", str3);
+    /* 连接 str1 和 str2 */
+    strcat(str1, str2);
+    printf("strcat( str1, str2):   %s\n", str1);
+    /* 连接后，str1 的总长度 */
+    len = strlen(str1);
+    printf("strlen(str1) :  %d\n", len);
+
+//    char s1[14] = "androida";
+//    char s2[14] = "nd";
+//    int code = strcmp(s1, s2);
+//    printf("code= :  %d\n", code);
+//    printf("code= :  %s\n", strstr(s1, "nd"));
+}
+
 //JNIEXPORT void test() {}
 void mainJ() {
 //    test0_1();
@@ -289,7 +318,8 @@ void mainJ() {
 //    test4();
 //    test5();
 //    test6();
-    test7();
+//    test7();
+    test8();
 }
 
 
