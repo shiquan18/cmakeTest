@@ -16,14 +16,14 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         // Example of a call to a native method
-        binding.sampleText.text = stringFromJNI()
+        binding.sampleText.text = stringFromJNI2()
     }
 
     /**
-     * A native method that is implemented by the 'myapplicationcmake' native library,
-     * which is packaged with this application.
+
      */
     external fun stringFromJNI(): String
+    external fun stringFromJNI2(): String
 
     companion object {
         // Used to load the 'myapplicationcmake' library on application startup.
