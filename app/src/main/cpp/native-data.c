@@ -3,6 +3,7 @@
 #include  <android/log.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 #include "jni.h"
 //#include "native-main.c"
 
@@ -177,7 +178,6 @@ JNIEXPORT void test3() {
 JNIEXPORT void test3_1() {
     int var[] = {10, 100, 200};
     int i, *ptr[MAX];
-
     for (i = 0; i < MAX; i++) {
         ptr[i] = &var[i]; /* 赋值为整数的地址 */
     }
@@ -195,9 +195,83 @@ JNIEXPORT void test3_2() {
             "Sara Ali",
     };
     int i = 0;
-
     for (i = 0; i < MAX; i++) {
-        printf("Value of names[%d] = %s\n", i, names[i]);
+        printf("char Value of names[%d] = %s\n", i, names[i]);
+    }
+}
+
+JNIEXPORT void test4() {
+    int V;
+    int *Pt1;
+    int **Pt2;
+    V = 100;
+    /* 获取 V 的地址 */
+    Pt1 = &V;
+    /* 使用运算符 & 获取 Pt1 的地址 */
+    Pt2 = &Pt1;
+    /* 使用 pptr 获取值 */
+    printf("var = %d\n", V);
+    printf("Pt1 = %p\n", Pt1);
+    printf("*Pt1 = %d\n", *Pt1);
+    printf("Pt2 = %p\n", Pt2);
+    printf("**Pt2 = %d\n", **Pt2);
+
+}
+
+JNIEXPORT void test5_getSeconds(unsigned long *par) {
+    /* 获取当前的秒数 */
+    *par = time(NULL);
+    return;
+}
+
+JNIEXPORT void test5() {
+    unsigned long sec;
+    test5_getSeconds(&sec);
+    /* 输出实际值 */
+    printf("Number of seconds: %ld\n", sec);
+}
+
+JNIEXPORT double test6_getAverage(int *arr, int size) {
+    int i, sum = 0;
+    double avg;
+    for (i = 0; i < size; ++i) {
+        printf("arr[i]: %d\n", arr[i]);
+        sum += arr[i];
+    }
+    printf("sum: %d\n", sum);
+    avg = (double) sum / size;
+    return avg;
+}
+
+JNIEXPORT void test6() {
+    /* 带有 5 个元素的整型数组  */
+    int balance[5] = {1000, 2, 3, 17, 50};
+    double avg;
+    /* 传递一个指向数组的指针作为参数 */
+    avg = test6_getAverage(balance, 5);
+    /* 输出返回值  */
+    printf("Average value is: %f\n", avg);
+}
+/* 要生成和返回随机数的函数 */
+JNIEXPORT int *test7_getRandom() {
+    static int r[10];
+    int i;
+    /* 设置种子 */
+    srand((unsigned) time(NULL));
+    for (i = 0; i < 10; ++i) {
+        r[i] = rand();
+        printf("%d\n", r[i]);
+    }
+    return r;
+}
+
+JNIEXPORT void test7() {
+    /* 一个指向整数的指针 */
+    int *p;
+    int i;
+    p = test7_getRandom();
+    for (i = 0; i < 10; i++) {
+        printf("*(p + [%d]) : %d\n", i, *(p + i));
     }
 }
 
@@ -209,9 +283,13 @@ void mainJ() {
 //    test1();
 //    test2();
 //    test2_1();
-    test3();
+//    test3();
 //    test3_1();
 //    test3_2();
+//    test4();
+//    test5();
+//    test6();
+    test7();
 }
 
 
