@@ -12,15 +12,13 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        // Example of a call to a native method
 //        binding.sampleText.text = stringFromJNI3()
 //        binding.sampleText.text = accessField()
-        binding.sampleText.text = "${accessStaticField()}"
-        accessMethod()
+//        binding.sampleText.text = "${accessStaticField()}"
+//        accessMethod()
+        JniMain()
     }
 
     external fun stringFromJNI(): String
@@ -34,7 +32,10 @@ class MainActivity : AppCompatActivity() {
     external fun accessStaticField(): Int//修改 count 字段
 
 
-    external fun accessMethod()
+    external fun accessMethod()//c to java
+
+
+    private external fun JniMain()
 
     fun genRandomInt(max: Int): Int {
         val random = Random()
@@ -43,7 +44,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     companion object {
-        // Used to load the 'myapplicationcmake' library on application startup.
         init {
             System.loadLibrary("myapplicationcmake")
         }

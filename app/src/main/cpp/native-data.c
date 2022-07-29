@@ -3,7 +3,6 @@
 #include  <android/log.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <typeinfo.h>
 #include "jni.h"
 
 #define  TAG    "MainActivity"
@@ -59,4 +58,12 @@ Java_com_example_myapplicationcmake_MainActivity_accessMethod(JNIEnv *env, jobje
     sprintf(text, "%d", random);
     LOGE("random str:%s,", text);
 
+}
+
+JNIEXPORT void JNICALL
+Java_com_example_myapplicationcmake_MainActivity_JniMain(JNIEnv *env, jobject thiz) {
+    LOGE("JniMain=%s,", "JniMain start");
+
+
+    LOGE("JniMain=%s,", "JniMain end");
 }
